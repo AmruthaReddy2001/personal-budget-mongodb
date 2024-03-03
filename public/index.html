@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- This is an SEO Change -->
+    <meta name="description" content="Manage all your expenses in one place">
+    <!-- This is an SEO Change -->
+    <meta name="keywords" content="Personal Budget App, Track expenses">
+    <!-- This is an SEO Change -->
+    <meta property="og:title" content="Personal Budget - Your Budget management App" />
+    <!-- This is an SEO Change -->
+    <meta property="og:description" content="Manage your Personal expenses" />
+    <!-- This is an SEO Change -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="main.css">
+    <style>
+        /* Added new CSS for charts */
+        .charts {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .text-box {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- This is a Semantic HTML change -->
+    <!-- This is an A11y Change -->
+    <nav class="menu" aria-label="Main Menu">
+        <ul>
+            <li><a href="">Homepage</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+            <!-- This is an A11y Change -->
+            <li><a href="https://google.com" target="_blank">Google</a></li>
+        </ul>
+    </nav>
+
+    <!-- This is a Semantic HTML change -->
+    <!-- This is an A11y Change -->
+    <header class="hero" role="banner">
+        <h1>Personal Budget</h1>
+        <h2>A personal-budget management app</h2>
+    </header>
+
+    <!-- This is a Semantic HTML change -->
+    <!-- This is an A11y Change -->
+    <section class="container center" role="main" aria-label="Features">
+        <div>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </article>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </article>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Results</h1>
+                <p>
+                    People who stick to a financial plan, budgeting every expense, get out of debt faster!
+                    Also, they to live happier lives... since they expend without guilt or fear... 
+                    because they know it is all good and accounted for.
+                </p>
+            </article>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Free</h1>
+                <p>
+                    This app is free!!! And you are the only one holding your data!
+                </p>
+            </article>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Stay on track</h1>
+                <p>
+                    Do you know where you are spending your money? If you really stop to track it down,
+                    you would get surprised! Proper budget management depends on real data... and this
+                    app will help you with that!
+                </p>
+            </article>
+            <!-- This is a Semantic HTML change -->
+            <article class="text-box">
+                <h1>Alerts</h1>
+                <p>
+                    What if your clothing budget ended? You will get an alert. The goal is to never go over the budget.
+                </p>
+            </article>
+            <div class="charts">
+                <!-- This is a Semantic HTML change -->
+                <article class="text-box d3js" id="d3jsChart">
+                    <h1>D3js Chart</h1>
+                </article>
+                <!-- This is a Semantic HTML change -->
+                <article class="text-box">
+                    <h1>Pie Chart</h1>
+                    <p>
+                        <canvas id="myChart" min-width="400" min-height="400"></canvas>
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- This is a Semantic HTML change -->
+    <!-- This is an A11y Change -->
+    <footer class="footer" role="contentinfo">
+        <div class="center">
+            All rights reserved &copy; Amrutha
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js" integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script>
+        var dataSource = {
+            labels: [],
+            datasets:[
+                {
+                    data: [],
+                    backgroundColor: [
+                        '#FF5733',
+                        '#33FF57',
+                        '#3366FF',
+                        '#9932CC',
+                        '#FFD700',
+                        '#8B4513',
+                        '#00FFFF',
+                        '#FF1493',
+                        '#2E8B57'
+                    ],
+                }
+            ],
+            myBudget: []
+        };
+
+        function createChart(){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: dataSource
+            })
+        }
+
+        function populateD3jsChart() {
+    // Define the dimensions and margins of the graph
+    var chartWidth = 450,
+        chartHeight = 450,
+        chartMargin = 60;
+
+    // Determine the radius of the pie plot as half the width or half the height (whichever is smaller), subtracting a margin.
+    var chartRadius = Math.min(chartWidth, chartHeight) / 2 - chartMargin;
+
+    // Select the existing SVG if present, otherwise create a new one
+    var chartSvg = d3.select("#d3jsChart").selectAll("svg").data([null]);
+
+    chartSvg = chartSvg.enter()
+        .append("svg")
+        .attr("width", chartWidth)
+        .attr("height", chartHeight)
+        .append("g")
+        .attr("transform", "translate(" + chartWidth / 2 + "," + chartHeight / 2 + ")");
+
+    // Prepare dummy data
+    var budgetData = dataSource.myBudget;
+
+    // Set up the color scale
+    var colorScale = d3.scaleOrdinal().range([
+        '#FF5733', '#33FF57', '#3366FF', '#9932CC', '#FFD700', '#8B4513', '#00FFFF', '#FF1493', '#2E8B57'
+    ]);
+
+    // Define the pie chart layout
+    var pie = d3.pie().sort(null).value(function (d) { return d.value.budget; });
+    var pieData = pie(d3.entries(budgetData));
+
+    // Define the arc generator
+    var arcGenerator = d3.arc()
+        .innerRadius(chartRadius * 0.45)
+        .outerRadius(chartRadius * 0.8);
+
+    // Build the pie chart by creating paths for each slice
+    chartSvg.selectAll('path')
+        .data(pieData)
+        .enter().append('path')
+        .attr('d', arcGenerator)
+        .attr('fill', function (d) { return colorScale(d.data.value.title); })
+        .attr("stroke", "white")
+        .style("stroke-width", "2px")
+        .style("opacity", 0.7);
+
+    // Add polylines connecting chart and labels
+    chartSvg.selectAll('polyline')
+        .data(pieData)
+        .enter().append('polyline')
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .attr("stroke-width", 1)
+        .attr('points', function (d) {
+            var startCoord = arcGenerator.centroid(d); // Line insertion in the slice
+            var endCoord = arcGenerator.centroid(d); // Line break, using the same arc generator
+            var labelCoord = arcGenerator.centroid(d); // Label position, nearly the same as endCoord
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2; // Angle for determining X position (right or left)
+            labelCoord[0] = chartRadius * 0.95 * (midangle < Math.PI ? 1 : -1); // Multiply by 1 or -1 to position on the right or left
+            return [startCoord, endCoord, labelCoord];
+        });
+
+    // Add labels to the chart
+    chartSvg.selectAll('text')
+        .data(pieData)
+        .enter().append('text')
+        .text(function (d) { return d.data.value.title; })
+        .attr('transform', function (d) {
+            var labelCoord = arcGenerator.centroid(d);
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            labelCoord[0] = chartRadius * 0.99 * (midangle < Math.PI ? 1 : -1);
+            return 'translate(' + labelCoord + ')';
+        })
+        .style('text-anchor', function (d) {
+            var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            return (midangle < Math.PI ? 'start' : 'end');
+        });
+}
+
+        function getBudget(){
+            axios.get('/budget')
+            .then(function (res) {
+                console.log(res.data);
+                for(var i = 0; i < res.data.myBudget.length; i++){
+                    dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
+                    dataSource.labels[i] = res.data.myBudget[i].title;
+                    dataSource.myBudget.push({
+                        "title": res.data.myBudget[i].title,
+                        "budget": res.data.myBudget[i].budget
+                    })
+                }
+                createChart();
+                populateD3jsChart();
+            })
+        }
+
+        getBudget();
+    </script>
+</body>
+</html>
