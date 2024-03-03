@@ -13,17 +13,17 @@ app.use('/', express.static("public"));
 
 const mongoURL = "mongodb://localhost:27017/Budget";
 
-mongoose.connect(mongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    family: 4  // Use IPv4
-})
-.then(() => {
-    console.log("Connected to Database");
-})
-.catch((error) => {
-    console.log("Unable to connect to Database.\n", error);
-});
+try {
+    mongoose.connect(mongoURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        family: 4  // Use IPv4
+    });
+    console.log("Connected to Mongo-Database");
+} catch (error) {
+    console.error("Error Connecting to Mongo-Database", error);
+}
+
 
 app.get('/api/budget', async (req, res) => {
     try {
@@ -35,16 +35,22 @@ app.get('/api/budget', async (req, res) => {
     }
 });
 
+
 app.post('/api/budget', async (req, res) => {
     try {
         const budgetEntry = new budgetdata(req.body);
-        const Entry = await budgetEntry.save();
-        res.json(Entry);
+        const entry = await budgetEntry.save();
+        res.json(entry);
     } catch (error) {
         console.error("Error adding expense:", error);
-        res.status(400).json({ error: error.message });
+        if (error.name === 'ValidationError') {
+            res.status(400).json({ error: 'Validation Error', details: error.errors });
+        } else {
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 });
+
 app.listen(port, () => {
     console.log(`API served at http://localhost:${port}`)
 });
