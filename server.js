@@ -30,8 +30,8 @@ app.get('/api/budget', async (req, res) => {
         const data = await budgetdata.find();
         res.json(data);
     } catch (error) {
-        console.error("Error fetching expenses:", error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error fetching Data:", error);
+        res.status(500).json({ error: 'Server Error' });
     }
 });
 
@@ -42,11 +42,11 @@ app.post('/api/budget', async (req, res) => {
         const entry = await budgetEntry.save();
         res.json(entry);
     } catch (error) {
-        console.error("Error adding expense:", error);
+        console.error("Error adding data:", error);
         if (error.name === 'ValidationError') {
             res.status(400).json({ error: 'Validation Error', details: error.errors });
         } else {
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: 'Server Error' });
         }
     }
 });
