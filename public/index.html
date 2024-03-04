@@ -134,17 +134,7 @@
             datasets:[
                 {
                     data: [],
-                    backgroundColor: [
-                        '#FF5733',
-                        '#33FF57',
-                        '#3366FF',
-                        '#9932CC',
-                        '#FFD700',
-                        '#8B4513',
-                        '#00FFFF',
-                        '#FF1493',
-                        '#2E8B57'
-                    ],
+                    backgroundColor: []
                 }
             ],
             myBudget: []
@@ -182,7 +172,7 @@
 
     // Set up the color scale
     var colorScale = d3.scaleOrdinal().range([
-        '#FF5733', '#33FF57', '#3366FF', '#9932CC', '#FFD700', '#8B4513', '#00FFFF', '#FF1493', '#2E8B57'
+        dataSource.datasets[0].backgroundColor
     ]);
 
     // Define the pie chart layout
@@ -238,15 +228,16 @@
 }
 
         function getBudget(){
-            axios.get('/budget')
+            axios.get('/api/budget')
             .then(function (res) {
                 console.log(res.data);
-                for(var i = 0; i < res.data.myBudget.length; i++){
-                    dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                    dataSource.labels[i] = res.data.myBudget[i].title;
+                for(var i = 0; i < res.data.length; i++){
+                    dataSource.datasets[0].data[i] = res.data[i].budget;
+                    dataSource.labels[i] = res.data[i].title;
+                    dataSource.datasets[0].backgroundColor[i] = res.data[i].color;
                     dataSource.myBudget.push({
-                        "title": res.data.myBudget[i].title,
-                        "budget": res.data.myBudget[i].budget
+                        "title": res.data[i].title,
+                        "budget": res.data[i].budget
                     })
                 }
                 createChart();
