@@ -171,9 +171,9 @@
     var budgetData = dataSource.myBudget;
 
     // Set up the color scale
-    var colorScale = d3.scaleOrdinal().range([
+    var colorScale = d3.scaleOrdinal().range(
         dataSource.datasets[0].backgroundColor
-    ]);
+    );
 
     // Define the pie chart layout
     var pie = d3.pie().sort(null).value(function (d) { return d.value.budget; });
@@ -232,12 +232,12 @@
             .then(function (res) {
                 console.log(res.data);
                 for(var i = 0; i < res.data.length; i++){
-                    dataSource.datasets[0].data[i] = res.data[i].budget;
+                    dataSource.datasets[0].data[i] = res.data[i].relatedValue;
                     dataSource.labels[i] = res.data[i].title;
                     dataSource.datasets[0].backgroundColor[i] = res.data[i].color;
                     dataSource.myBudget.push({
                         "title": res.data[i].title,
-                        "budget": res.data[i].budget
+                        "budget": res.data[i].relatedValue
                     })
                 }
                 createChart();
